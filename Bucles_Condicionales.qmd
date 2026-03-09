@@ -1,0 +1,143 @@
+---
+title: "Bucles y Declaraciones Condicionales"
+author: "jfloresr@unal.edu.co"
+date: 2026-03-03
+format:
+  html:
+    toc: true
+    number-sections: true
+    theme: cosmo
+  pdf:
+    toc: true
+    toc-title: "Contenido"
+    number-sections: true
+    documentclass: scrreprt
+    geometry:
+      - top=25mm
+      - left=25mm
+      - right=25mm
+      - bottom=25mm
+---
+
+# Introducción
+
+En este documento integro las soluciones a los ejercicios sobre **bucles** y **declaraciones condicionales** en Python, R y Julia. El objetivo es mostrar el código, los resultados y reflexionar sobre las diferencias entre lenguajes, la indentación, el riesgo de ciclos infinitos y el uso correcto de operadores lógicos.
+
+Primero presento el Ejercicio 1 (clasificación de fincas por altitud) y luego el Ejercicio 2 (monitoreo de niveles del Río Magdalena con un ciclo `while`). Finalmente respondo las preguntas conceptuales solicitadas.
+
+# Ejercicio 1: Clasificación iterativa (ciclo for e if-else)
+Contexto: Estás trabajando en un proyecto de zonificación agrícola en el Eje Cafetero. Tienes una lista de fincas con su respectiva altitud. Sabiendo que el café de especialidad de la región requiere alturas entre los 1700 y los 2200 metros sobre el nivel del mar (msnm), necesitas crear un algoritmo que clasifique automáticamente cada finca.
+
+Instrucciones de código:
+
+Crea una colección (lista o vector) llamada altitudes_fincas que contenga los siguientes valores numéricos: 1350, 1750, 1900, 2300, 1600, 2100.
+
+Inicializa dos contadores en cero: conteo_especial y conteo_tradicional.
+
+Inicializa dos colecciones vacías (listas o vectores) llamadas fincas_especiales y fincas_tradicionales.
+
+Construye un ciclo for que recorra uno a uno los valores de altitudes_fincas.
+
+Dentro del ciclo, utiliza una declaración if - else con operadores lógicos (AND) para evaluar cada altitud:
+
+Si la altitud es mayor o igual a 1700 Y menor o igual a 2200, agrega la altitud a la colección fincas_especiales y suma 1 al conteo_especial. De lo contrario, agrégala a la colección fincas_tradicionales y suma 1 al conteo_tradicional. Fuera del ciclo, imprime un reporte final que muestre cuántas fincas son aptas para café de especialidad y cuántas para café tradicional, mostrando además los valores guardados en ambas colecciones.
+
+
+```{python}
+# Altitudes de las fincas (msnm)
+altitudes_fincas = [1350, 1750, 1900, 2300, 1600, 2100]
+
+# Contadores
+conteo_especial = 0
+conteo_tradicional = 0
+
+# Colecciones
+fincas_especiales = []
+fincas_tradicionales = []
+
+# Clasificación iterativa
+for alt in altitudes_fincas:
+    if 1700 <= alt <= 2200:   # condición para café de especialidad
+        fincas_especiales.append(alt)
+        conteo_especial += 1
+    else:
+        fincas_tradicionales.append(alt)
+        conteo_tradicional += 1
+
+# Reporte final
+print("--- REPORTE DE FINCAS (EJE CAFETERO) ---")
+print(f"Fincas de café de especialidad: {conteo_especial}")
+print(f"Altitudes especiales: {fincas_especiales}")
+print(f"Fincas de café tradicional: {conteo_tradicional}")
+print(f"Altitudes tradicionales: {fincas_tradicionales}")
+```  
+
+# Ejercicio 2: Monitoreo de sensores (ciclo while y control de flujo)
+Contexto: El IDEAM te ha encargado programar el software de una estación hidrológica automatizada en el Río Magdalena. El sensor debe tomar lecturas continuas del nivel del agua. Si el río supera los 8.5 metros, el sistema debe disparar una alerta de inundación y detener las mediciones para proteger el equipo. Si después de cierto número de lecturas todo está normal, el sensor entra en modo de reposo.
+
+Instrucciones de código:
+
+Define las siguientes variables de configuración:
+
+nivel_alerta = 8.5
+max_lecturas = 12
+lectura_actual = 0
+Una bandera lógica (Booleana) llamada alerta_inundacion inicializada como Falsa (False / FALSE / false).
+Construye un ciclo while que se ejecute mientras lectura_actual sea menor a max_lecturas.
+
+Dentro del ciclo, simula la medición del río generando un número decimal aleatorio entre 5.0 y 9.0 (usa la función nativa de tu lenguaje para números aleatorios, ej. random.uniform en Python, runif en R, o rand en Julia).
+
+Incrementa en 1 la variable lectura_actual. Imprime en pantalla el número del intento y el nivel del agua medido (con dos decimales).
+
+Usa un condicional if para verificar si la medición superó o igualó el nivel_alerta. Si es así:
+
+Cambia la bandera alerta_inundacion a Verdadera.
+Imprime un mensaje de “¡ALERTA ROJA! Posible desbordamiento.”
+Rompe el ciclo inmediatamente usando el comando adecuado (break).
+Fuera del ciclo while, utiliza un condicional para evaluar tu bandera lógica. Si la bandera sigue siendo Falsa, imprime: “Monitoreo finalizado. Niveles estables.”
+
+
+```{python}
+import random
+
+nivel_alerta = 8.5
+max_lecturas = 12
+lectura_actual = 0
+alerta_inundacion = False
+
+print(f"--- Monitoreo Río Magdalena (hasta {max_lecturas} lecturas) ---")
+
+while lectura_actual < max_lecturas:
+    nivel = random.uniform(5.0, 9.0)
+    lectura_actual += 1
+    print(f"Lectura {lectura_actual}: nivel = {nivel:.2f} m")
+
+    if nivel >= nivel_alerta:
+        alerta_inundacion = True
+        print("¡ALERTA ROJA! Posible desbordamiento.")
+        break
+
+# Evaluación final
+if not alerta_inundacion:
+    print("Monitoreo finalizado. Niveles estables.")
+```   
+
+# Reflexiones y análisis
+
+## Sobre el Ejercicio 1: Indentación y bloques
+
+En Python, el computador sabe qué instrucciones pertenecen dentro del ciclo `for` y dentro del `if` gracias a la **indentación**. Todas las líneas que están indentadas debajo de la línea `for` forman parte del bloque del bucle, y todas las que están aún más indentadas debajo de `if` pertenecen al bloque condicional. Cuando una instrucción vuelve a la columna inicial (sin espacios delante), Python entiende que ya no está dentro del `for` ni del `if` y se ejecuta solo al final.
+
+En cambio, en R y Julia la estructura del código no depende de los espacios, sino de delimitadores explícitos. En R se usan llaves `{}` para indicar qué código pertenece a un `for` o a un `if`, y en Julia se utiliza la palabra `end` para cerrar cada bloque. La indentación ayuda a leer el código, pero no cambia su significado. La diferencia estructural es que en Python un error de espacios puede cambiar el flujo del programa, mientras que en R y Julia el error típico es olvidar una llave de cierre o un `end`.
+
+## Sobre el Ejercicio 2: Ciclos infinitos
+
+En el ciclo `while` del río Magdalena, la condición de parada es `lectura_actual < max_lecturas`. Si olvidara incrementar `lectura_actual` dentro del bucle, esa condición nunca cambiaría y el `while` se convertiría en un ciclo infinito. El programa seguiría generando lecturas sin detenerse, consumiendo CPU y memoria hasta que el entorno se bloquee o haya que detenerlo manualmente.
+
+Este riesgo no existe de la misma forma al usar un ciclo `for`, porque el número de iteraciones está controlado por el propio lenguaje. En un `for`, la variable de iteración avanza automáticamente por un rango o por una colección y el bucle siempre termina cuando se acaban los elementos, incluso si yo nunca modifico manualmente esa variable. Por eso es más fácil cometer el error de un ciclo infinito con `while` que con `for`.
+
+## Pregunta general: Operadores lógicos en R y Julia
+
+En R y Julia existen dos tipos de operadores lógicos. Los operadores dobles `&&` y `||` están pensados para tomar decisiones escalares dentro de sentencias como `if` o `while`. Estos operadores solo evalúan el primer valor lógico de cada lado y hacen cortocircuito, es decir, dejan de evaluar en cuanto pueden decidir el resultado. Por eso son útiles cuando la condición debe ser un único TRUE o FALSE.
+
+Cuando intento filtrar un vector completo de altitudes usando `&&` o `||`, el resultado es peligroso porque la decisión se basa únicamente en el primer elemento del vector y se ignora el resto. En ese caso debo usar los operadores vectorizados: `&` y `|` en R, o `.&` y `.|` en Julia. Estos operadores aplican la condición elemento por elemento y devuelven un vector lógico del mismo tamaño, que funciona como un filtro para seleccionar solo las altitudes que cumplen el criterio. Para trabajar con muchos datos en paralelo, el operador sencillo es el adecuado y el doble debe evitarse.
